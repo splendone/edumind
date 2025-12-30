@@ -1,0 +1,121 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: ai-learning-platform
+  
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ai_learning_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: your_password
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
+  
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# MyBatis-Plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.ai.learning.entity
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT配置
+jwt:
+  secret: ai-learning-platform-secret-key-2024-very-long-secret
+  expiration: 604800000 # 7天 (毫秒)
+  header: Authorization
+  prefix: Bearer 
+
+# 阿里云VOD配置
+aliyun:
+  vod:
+    access-key-id: your_access_key_id
+    access-key-secret: your_access_key_secret
+    region-id: cn-shanghai
+    callback-url: http://your-domain.com/api/vod/callback
+
+# AI API配置
+ai:
+  api:
+    base-url: https://api.openai.com/v1
+    api-key: your_openai_api_key
+    model: gpt-4
+    max-tokens: 2000
+    temperature: 0.7
+  
+  # RAG配置
+  rag:
+    enabled: true
+    vector-db: memory # 可选: memory, milvus, pinecone
+    embedding-model: text-embedding-ada-002
+    chunk-size: 500
+    chunk-overlap: 50
+    top-k: 5
+
+# 推荐系统配置
+recommendation:
+  algorithm: collaborative-filtering # 协同过滤
+  similar-threshold: 0.6
+  max-recommendations: 10
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.ai.learning: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/ai-learning-platform.log
